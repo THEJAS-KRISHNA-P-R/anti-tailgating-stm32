@@ -101,7 +101,23 @@ bool rc522_init(void)
     wr(TxASKReg, 0x40);                                   /* 100% ASK */
     wr(ModeReg, 0x3D);                                    /* CRC preset 0x6363 */
     wr(RFCfgReg, 0x70);                                   /* max receiver gain (48 dB) */
-    uint8_t v = rd(TxControlReg); if ((v & 3) != 3) wr(TxControlReg, v | 3);   /* antenna on */
+
+/* Force antenna ON and verify it took effect.
+   The MFRC522 RF field is controlled by bits 1:0 of TxControlReg.
+   Value 3 (0b11) turns the antenna on. Without this check, the chip
+   may appear to init but remain deaf to cards (common after supply
+   glitches or loose SPI wires). */
+    uint8_t v = rd(TxControlReg);
+    if ((v & 3) != 3) {
+        wr(TxControlReg, v | 3);
+        /* Verify antenna enable took effect; if not, give up so the
+           main loop can keep trying to re-initialize instead of
+           silently operating in a broken state. */
+        if ((rd(TxControlReg) & 3) != 3) {
+            uint8_t ver = rd(VersionReg);
+            return ver != 0x00 && ver != 0xFF;
+        }
+    }
     uint8_t ver = rd(VersionReg);
     return ver != 0x00 && ver != 0xFF;
 }

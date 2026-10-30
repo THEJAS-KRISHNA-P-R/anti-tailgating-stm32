@@ -43,6 +43,7 @@ static card_state_t cs = CARD_SCAN;
 static uint8_t last_uid[4], miss;
 static uint32_t t_card, red_until, t_rc;
 static bool rc_ok;
+static tg_decision_t d;
 static IWDG_HandleTypeDef hiwdg;
 
 /* Poll the reader. A card is processed once per presentation: after reading we HALT it and keep
@@ -65,7 +66,11 @@ static void card_task(uint32_t now)
             rc522_halt(); miss = 0;
             if (fresh) {
                 memcpy(last_uid, uid, 4); cs = CARD_HOLD;
-                if (secure_authorize_entry(uid) != TG_GRANT) red_until = now + 600u;
+                d = secure_authorize_entry(uid);
+                if (d == TG_GRANT) {
+                    pulse_servo_once();  /* servo turns once on successful tap */
+                }
+                if (d != TG_GRANT) red_until = now + 600u;
             }
         } else if (cs == CARD_SCAN) {
             ns_printf("WARN,UNREADABLE_OR_UNSUPPORTED_CARD\r\n"); memset(last_uid, 0, 4); cs = CARD_HOLD; miss = 0;
@@ -84,6 +89,15 @@ static void led_task(uint32_t now)
         HAL_GPIO_WritePin(LED_RED_PORT, LED_RED_PIN, red ? GPIO_PIN_SET : GPIO_PIN_RESET);
     }
     if ((int32_t)(now - t_hb) >= 0) { t_hb = now + 500u; HAL_GPIO_TogglePin(LED_BOARD_PORT, LED_BOARD_PIN); }
+}
+
+/* Pulse the servo once: unlock (1700 us) -> hold 500ms -> lock (700 us).
+   Gives tactile feedback when an RFID card is tapped. */
+static void pulse_servo_once(void)
+{
+    hw_servo_set_us(SERVO_UNLOCK_US_DEFAULT);
+    HAL_Delay(500);
+    hw_servo_set_us(SERVO_LOCK_US_DEFAULT);
 }
 
 int main(void)
