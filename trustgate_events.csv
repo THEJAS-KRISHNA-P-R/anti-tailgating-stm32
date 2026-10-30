@@ -53,3 +53,15 @@
 2026-10-30 09:53:33,1,192,TIME_SET,-1,00000000,0,
 2026-10-30 09:53:34,0,58,BOOT,-1,00000000,2,reset pin
 2026-10-30 09:53:34,1,119,TIME_SET,-1,00000000,0,
+2026-10-30 09:57:06,2,212694,UNAUTH_PASSAGE,-1,00000000,0,passage with no valid tap (in)
+2026-10-30 09:57:14,3,220325,UNAUTH_PASSAGE,-1,00000000,0,passage with no valid tap (in)
+2026-10-30 09:57:21,4,227058,UNAUTH_PASSAGE,-1,00000000,1,passage with no valid tap (out)
+2026-10-30 09:57:24,5,230248,UNAUTH_PASSAGE,-1,00000000,1,passage with no valid tap (out)
+2026-10-30 10:04:34,6,660071,UNAUTH_PASSAGE,-1,00000000,0,passage with no valid tap (in)
+2026-10-30 10:08:04,7,870791,GROUP_SUSPECT,-1,00000000,1542,beams blocked 1542 ms: possible group / loitering
+2026-10-30 10:08:05,8,871118,UNAUTH_PASSAGE,-1,00000000,1,passage with no valid tap (out)
+2026-10-30 10:08:12,9,878782,GROUP_SUSPECT,-1,00000000,4256,beams blocked 4256 ms: possible group / loitering
+2026-10-30 10:08:19,10,885138,GROUP_SUSPECT,-1,00000000,6080,beams blocked 6080 ms: possible group / loitering
+2026-10-30 10:08:22,11,888631,UNAUTH_PASSAGE,-1,00000000,1,passage with no valid tap (out)
+2026-10-30 10:08:24,12,890445,GROUP_SUSPECT,-1,00000000,2292,beams blocked 2292 ms: possible group / loitering
+2026-10-30 10:31:39,13,2285710,UNAUTH_PASSAGE,-1,00000000,1,passage with no valid tap (out)
